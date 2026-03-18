@@ -43,15 +43,33 @@ The plugin zip is written to `build/distributions/`.
 
 **Option B: Database tools only (recommended)**
 
-Use the included filter proxy to hide DataGrip's built-in file/editor/terminal tools:
+Add the following deny list to `.claude/settings.local.json` (or `.claude/settings.json` for team-wide config) to hide DataGrip's built-in IDE tools and keep only the 6 database tools:
 
 ```json
 {
-  "mcpServers": {
-    "datagrip-db": {
-      "command": "python3",
-      "args": ["/path/to/mcp-filter-proxy.py", "/path/to/datagrip", "mcp", "stdio"]
-    }
+  "permissions": {
+    "deny": [
+      "mcp__jetbrains__open_file_in_editor",
+      "mcp__jetbrains__reformat_file",
+      "mcp__jetbrains__execute_run_configuration",
+      "mcp__jetbrains__get_run_configurations",
+      "mcp__jetbrains__build_project",
+      "mcp__jetbrains__get_file_problems",
+      "mcp__jetbrains__get_project_dependencies",
+      "mcp__jetbrains__get_project_modules",
+      "mcp__jetbrains__create_new_file",
+      "mcp__jetbrains__find_files_by_glob",
+      "mcp__jetbrains__find_files_by_name_keyword",
+      "mcp__jetbrains__get_all_open_file_paths",
+      "mcp__jetbrains__list_directory_tree",
+      "mcp__jetbrains__get_file_text_by_path",
+      "mcp__jetbrains__replace_text_in_file",
+      "mcp__jetbrains__search_in_files_by_regex",
+      "mcp__jetbrains__search_in_files_by_text",
+      "mcp__jetbrains__get_symbol_info",
+      "mcp__jetbrains__rename_refactoring",
+      "mcp__jetbrains__get_repositories"
+    ]
   }
 }
 ```
