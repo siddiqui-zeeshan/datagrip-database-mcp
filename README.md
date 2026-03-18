@@ -1,0 +1,78 @@
+# Database MCP Tools
+
+A DataGrip plugin that extends its built-in MCP server with 6 database tools. AI assistants like Claude Code can query databases through DataGrip's existing connections -- SSH tunnels, SSL, and auth included -- with zero extra config.
+
+## Requirements
+
+- DataGrip 2025.2+
+- JDK 17+
+
+## Building
+
+```
+./gradlew buildPlugin
+```
+
+The plugin zip is written to `build/distributions/`.
+
+## Installation
+
+1. In DataGrip, go to **Settings > Plugins**.
+2. Click the gear icon and select **Install Plugin from Disk...**.
+3. Select the zip from `build/distributions/`.
+4. Restart DataGrip.
+
+## Setup
+
+1. Enable the MCP server in DataGrip: **Settings > Tools > MCP Server** (requires DataGrip 2025.2+).
+2. Connect the datasources you want to expose.
+3. Configure Claude Code (or another MCP client) to use DataGrip's MCP server. In your Claude Code MCP config:
+
+```json
+{
+  "mcpServers": {
+    "datagrip": {
+      "command": "/path/to/datagrip",
+      "args": ["mcp", "stdio"]
+    }
+  }
+}
+```
+
+The 6 database tools will appear automatically once the plugin is installed and the MCP server is enabled.
+
+## Tools
+
+| Tool | Parameters | Returns |
+|------|-----------|---------|
+| `list_datasources` | _(none)_ | Name, driver, connection status, and write-enabled flag for each datasource |
+| `get_schema` | `datasource`, `schema?` | Tables with columns, types, primary keys, and nullability |
+| `run_query` | `datasource`, `sql`, `rowLimit?`, `timeout?` | Columns, rows, row count, and whether results were truncated |
+| `explain_query` | `datasource`, `sql` | Execution plan (auto-prefixes the correct EXPLAIN syntax for the DB driver) |
+| `get_table_info` | `datasource`, `table`, `schema?` | Columns, types, primary keys, foreign keys, and indexes for a single table |
+| `search_schema` | `datasource`, `pattern` | Tables and columns matching the pattern, with their types |
+
+All tools require the datasource to be connected in DataGrip first.
+
+## Safety
+
+**Read-only by default.** Only `SELECT`, `EXPLAIN`, `SHOW`, `DESCRIBE`, and `WITH` statements are allowed unless writes are explicitly enabled.
+
+- **Per-datasource write toggle**: Settings > Tools > Database MCP Tools
+- **Query timeout**: 30 seconds (default), configurable per datasource
+- **Row limit**: 1000 rows (default), configurable per datasource and overridable per query via the `rowLimit` parameter
+- **Response size cap**: ~100KB -- results are truncated if they exceed this
+
+## Development
+
+Launch a DataGrip sandbox with the plugin loaded:
+
+```
+./gradlew runIde
+```
+
+Run tests:
+
+```
+./gradlew test
+```

@@ -1,0 +1,30 @@
+<idea-plugin>
+    <id>com.clawphone.datagrip.mcp</id>
+    <name>Database MCP Tools</name>
+    <version>0.1.0</version>
+    <vendor>clawphone</vendor>
+
+    <description><![CDATA[
+    Extends DataGrip's built-in MCP server with database query and schema tools.
+    Lets AI assistants like Claude Code query databases through DataGrip's existing
+    connections — SSH tunnels, SSL, and auth included — with zero extra config.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.database</depends>
+    <depends>com.intellij.mcpServer</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService
+            serviceImplementation="com.clawphone.datagrip.mcp.settings.DbMcpSettings"/>
+        <applicationConfigurable
+            parentId="tools"
+            instance="com.clawphone.datagrip.mcp.settings.DbMcpSettingsConfigurable"
+            id="com.clawphone.datagrip.mcp.settings"
+            displayName="Database MCP Tools"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij.mcpServer">
+        <mcpToolset implementation="com.clawphone.datagrip.mcp.tools.DatabaseToolset"/>
+    </extensions>
+</idea-plugin>
