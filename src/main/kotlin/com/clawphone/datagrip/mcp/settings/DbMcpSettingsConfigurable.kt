@@ -1,6 +1,9 @@
 package com.clawphone.datagrip.mcp.settings
 
+import com.intellij.database.dataSource.LocalDataSource
+import com.intellij.database.psi.DbPsiFacade
 import com.intellij.openapi.options.Configurable
+import com.intellij.openapi.project.ProjectManager
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.table.JBTable
 import com.intellij.util.ui.FormBuilder
@@ -18,16 +21,29 @@ class DbMcpSettingsConfigurable : Configurable {
     override fun createComponent(): JComponent {
         val settings = DbMcpSettings.getInstance()
 
-        tableModel = DefaultTableModel(
+        val datasourceNames = ProjectManager.getInstance().openProjects
+            .flatMap { DbPsiFacade.getInstance(it).dataSources }
+            .map { it.name }
+            .distinct()
+            .sorted()
+
+        tableModel = object : DefaultTableModel(
             arrayOf("Datasource", "Write Enabled", "Timeout (s)", "Row Limit"),
             0,
-        ).apply {
-            for (ds in settings.writeEnabledDatasources) {
+        ) {
+            override fun getColumnClass(columnIndex: Int): Class<*> = when (columnIndex) {
+                1 -> java.lang.Boolean::class.java
+                else -> String::class.java
+            }
+
+            override fun isCellEditable(row: Int, column: Int): Boolean = column != 0
+        }.apply {
+            for (name in datasourceNames) {
                 addRow(arrayOf(
-                    ds,
-                    true,
-                    settings.timeoutOverrides[ds] ?: "",
-                    settings.rowLimitOverrides[ds] ?: "",
+                    name,
+                    settings.isWriteEnabled(name),
+                    settings.timeoutOverrides[name]?.toString() ?: "",
+                    settings.rowLimitOverrides[name]?.toString() ?: "",
                 ))
             }
         }
@@ -47,8 +63,17 @@ class DbMcpSettingsConfigurable : Configurable {
         val settings = DbMcpSettings.getInstance()
         val model = tableModel ?: return false
 
-        val currentNames = (0 until model.rowCount).map { model.getValueAt(it, 0) as String }.toSet()
-        return currentNames != settings.writeEnabledDatasources
+        for (i in 0 until model.rowCount) {
+            val name = model.getValueAt(i, 0) as String
+            val writeEnabled = model.getValueAt(i, 1) as? Boolean ?: false
+            val timeout = (model.getValueAt(i, 2) as? String)?.toIntOrNull()
+            val rowLimit = (model.getValueAt(i, 3) as? String)?.toIntOrNull()
+
+            if (writeEnabled != settings.isWriteEnabled(name)) return true
+            if (timeout != settings.timeoutOverrides[name]) return true
+            if (rowLimit != settings.rowLimitOverrides[name]) return true
+        }
+        return false
     }
 
     override fun apply() {
