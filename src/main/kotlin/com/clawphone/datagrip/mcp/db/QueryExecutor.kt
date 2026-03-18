@@ -1,7 +1,5 @@
 package com.clawphone.datagrip.mcp.db
 
-import com.intellij.database.dataSource.DatabaseConnectionManager
-import com.intellij.database.dataSource.LocalDataSource
 import com.intellij.database.psi.DbDataSource
 import com.intellij.openapi.project.Project
 import kotlinx.serialization.json.JsonNull
@@ -16,7 +14,7 @@ object QueryExecutor {
     private const val DEFAULT_TIMEOUT_SECONDS = 30
     private const val MAX_RESPONSE_BYTES = 100_000
 
-    fun execute(
+    suspend fun execute(
         project: Project,
         dataSource: DbDataSource,
         sql: String,
@@ -26,17 +24,7 @@ object QueryExecutor {
         val limit = rowLimit ?: DEFAULT_ROW_LIMIT
         val timeout = timeoutSeconds ?: DEFAULT_TIMEOUT_SECONDS
 
-        val localDs = dataSource.delegateDataSource as? LocalDataSource
-            ?: throw IllegalStateException("Datasource '${dataSource.name}' is not a local datasource.")
-
-        val connectionManager = DatabaseConnectionManager.getInstance()
-        val dbConnection = connectionManager.activeConnections
-            .firstOrNull { it.connectionPoint == localDs }
-            ?: throw IllegalStateException(
-                "No active connection for datasource '${dataSource.name}'. " +
-                    "Please connect to the datasource in DataGrip first."
-            )
-
+        val dbConnection = DataSourceResolver.ensureConnected(project, dataSource)
         val remoteConnection = dbConnection.remoteConnection
         val stmt = remoteConnection.createStatement()
         try {
