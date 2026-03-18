@@ -25,8 +25,10 @@ The plugin zip is written to `build/distributions/`.
 ## Setup
 
 1. Enable the MCP server in DataGrip: **Settings > Tools > MCP Server** (requires DataGrip 2025.2+).
-2. Connect the datasources you want to expose.
-3. Configure Claude Code (or another MCP client) to use DataGrip's MCP server. In your Claude Code MCP config:
+2. Datasources auto-connect on demand -- no manual connect step needed (passwords must be saved in DataGrip).
+3. Configure Claude Code (or another MCP client) to use DataGrip's MCP server.
+
+**Option A: All tools (database + built-in IDE tools)**
 
 ```json
 {
@@ -34,6 +36,21 @@ The plugin zip is written to `build/distributions/`.
     "datagrip": {
       "command": "/path/to/datagrip",
       "args": ["mcp", "stdio"]
+    }
+  }
+}
+```
+
+**Option B: Database tools only (recommended)**
+
+Use the included filter proxy to hide DataGrip's built-in file/editor/terminal tools:
+
+```json
+{
+  "mcpServers": {
+    "datagrip-db": {
+      "command": "python3",
+      "args": ["/path/to/mcp-filter-proxy.py", "/path/to/datagrip", "mcp", "stdio"]
     }
   }
 }
