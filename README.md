@@ -56,6 +56,15 @@ Use the included filter proxy to hide DataGrip's built-in file/editor/terminal t
 }
 ```
 
+Replace `/path/to/datagrip` with the actual path:
+
+| OS | Path |
+|----|------|
+| macOS (Toolbox) | `~/Library/Application Support/JetBrains/Toolbox/scripts/datagrip` |
+| macOS (standalone) | `/Applications/DataGrip.app/Contents/MacOS/datagrip` |
+| Linux (Toolbox) | `~/.local/share/JetBrains/Toolbox/scripts/datagrip` |
+| Windows (Toolbox) | `%LOCALAPPDATA%\JetBrains\Toolbox\scripts\datagrip.cmd` |
+
 The 6 database tools will appear automatically once the plugin is installed and the MCP server is enabled.
 
 ## Tools
@@ -69,7 +78,7 @@ The 6 database tools will appear automatically once the plugin is installed and 
 | `get_table_info` | `datasource`, `table`, `schema?` | Columns, types, primary keys, foreign keys, and indexes for a single table |
 | `search_schema` | `datasource`, `pattern` | Tables and columns matching the pattern, with their types |
 
-All tools require the datasource to be connected in DataGrip first.
+Datasources auto-connect on demand. Passwords must be saved in DataGrip for unattended connections.
 
 ## Safety
 
