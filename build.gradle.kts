@@ -33,7 +33,7 @@ dependencies {
         // instrumentationTools() is no longer necessary with recent plugin versions
     }
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 
     testImplementation("junit:junit:4.13.2")
 }
