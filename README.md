@@ -4,7 +4,7 @@ A DataGrip plugin that extends its built-in MCP server with 6 database tools. AI
 
 ## Requirements
 
-- DataGrip 2025.2+
+- DataGrip 2025.3+
 - JDK 17+
 
 ## Building
@@ -24,7 +24,7 @@ The plugin zip is written to `build/distributions/`.
 
 ## Setup
 
-1. Enable the MCP server in DataGrip: **Settings > Tools > MCP Server** (requires DataGrip 2025.2+).
+1. Enable the MCP server in DataGrip: **Settings > Tools > MCP Server** (requires DataGrip 2025.3+).
 2. Datasources auto-connect on demand -- no manual connect step needed (passwords must be saved in DataGrip).
 3. Configure Claude Code (or another MCP client) to use DataGrip's MCP server.
 
