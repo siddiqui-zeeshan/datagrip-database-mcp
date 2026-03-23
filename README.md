@@ -28,60 +28,68 @@ The plugin zip is written to `build/distributions/`.
 2. Datasources auto-connect on demand -- no manual connect step needed (passwords must be saved in DataGrip).
 3. Configure Claude Code (or another MCP client) to use DataGrip's MCP server.
 
-**Option A: All tools (database + built-in IDE tools)**
+**Option A: Database tools only (recommended)**
+
+Use the included filter proxy to expose only the 6 database tools. This strips DataGrip's built-in IDE tools from the MCP response, keeping your AI assistant's context clean.
 
 ```json
 {
   "mcpServers": {
-    "datagrip": {
-      "command": "/path/to/datagrip",
-      "args": ["mcp", "stdio"]
+    "datagrip-db": {
+      "command": "python3",
+      "args": [
+        "/path/to/mcp-filter-proxy.py",
+        "/path/to/java",
+        "-classpath",
+        "/path/to/mcpserver-classpath",
+        "com.intellij.mcpserver.stdio.McpStdioRunnerKt"
+      ],
+      "env": {
+        "IJ_MCP_SERVER_PORT": "<port>"
+      }
     }
   }
 }
 ```
 
-**Option B: Database tools only (recommended)**
+See [Classpath and port](#classpath-and-port) below for how to find the correct values.
 
-Add the following deny list to `.claude/settings.local.json` (or `.claude/settings.json` for team-wide config) to hide DataGrip's built-in IDE tools and keep only the 6 database tools:
+**Option B: All tools (database + built-in IDE tools)**
+
+Connect directly to DataGrip's MCP server without filtering. This exposes all built-in IDE tools alongside the database tools.
 
 ```json
 {
-  "permissions": {
-    "deny": [
-      "mcp__jetbrains__open_file_in_editor",
-      "mcp__jetbrains__reformat_file",
-      "mcp__jetbrains__execute_run_configuration",
-      "mcp__jetbrains__get_run_configurations",
-      "mcp__jetbrains__build_project",
-      "mcp__jetbrains__get_file_problems",
-      "mcp__jetbrains__get_project_dependencies",
-      "mcp__jetbrains__get_project_modules",
-      "mcp__jetbrains__create_new_file",
-      "mcp__jetbrains__find_files_by_glob",
-      "mcp__jetbrains__find_files_by_name_keyword",
-      "mcp__jetbrains__get_all_open_file_paths",
-      "mcp__jetbrains__list_directory_tree",
-      "mcp__jetbrains__get_file_text_by_path",
-      "mcp__jetbrains__replace_text_in_file",
-      "mcp__jetbrains__search_in_files_by_regex",
-      "mcp__jetbrains__search_in_files_by_text",
-      "mcp__jetbrains__get_symbol_info",
-      "mcp__jetbrains__rename_refactoring",
-      "mcp__jetbrains__get_repositories"
-    ]
+  "mcpServers": {
+    "datagrip": {
+      "command": "/path/to/java",
+      "args": [
+        "-classpath",
+        "/path/to/mcpserver-classpath",
+        "com.intellij.mcpserver.stdio.McpStdioRunnerKt"
+      ],
+      "env": {
+        "IJ_MCP_SERVER_PORT": "<port>"
+      }
+    }
   }
 }
 ```
 
-Replace `/path/to/datagrip` with the actual path:
+### Classpath and port
 
-| OS | Path |
+The MCP server runs via DataGrip's bundled JRE, not the DataGrip CLI. You need two things:
+
+1. **Java binary**: `<DataGrip install>/Contents/jbr/Contents/Home/bin/java` (macOS) or the equivalent on your OS.
+2. **Classpath**: the JARs under `<DataGrip install>/Contents/plugins/mcpserver/lib/` and `<DataGrip install>/Contents/lib/`. See the [global MCP setup](#classpath-and-port) section for details.
+3. **Port**: set `IJ_MCP_SERVER_PORT` to the port shown in DataGrip under **Settings > Tools > MCP Server**.
+
+| OS | DataGrip install path |
 |----|------|
-| macOS (Toolbox) | `~/Library/Application Support/JetBrains/Toolbox/scripts/datagrip` |
-| macOS (standalone) | `/Applications/DataGrip.app/Contents/MacOS/datagrip` |
-| Linux (Toolbox) | `~/.local/share/JetBrains/Toolbox/scripts/datagrip` |
-| Windows (Toolbox) | `%LOCALAPPDATA%\JetBrains\Toolbox\scripts\datagrip.cmd` |
+| macOS (Toolbox) | `~/Library/Application Support/JetBrains/Toolbox/apps/datagrip/` |
+| macOS (standalone) | `/Applications/DataGrip.app/` |
+| Linux (Toolbox) | `~/.local/share/JetBrains/Toolbox/apps/datagrip/` |
+| Windows (Toolbox) | `%LOCALAPPDATA%\JetBrains\Toolbox\apps\datagrip\` |
 
 The 6 database tools will appear automatically once the plugin is installed and the MCP server is enabled.
 

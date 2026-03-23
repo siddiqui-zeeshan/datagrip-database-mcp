@@ -1,10 +1,10 @@
-package com.clawphone.datagrip.mcp.tools
+package io.github.siddiquizeeshan.datagrip.mcp.tools
 
-import com.clawphone.datagrip.mcp.db.DataSourceResolver
-import com.clawphone.datagrip.mcp.db.QueryExecutor
-import com.clawphone.datagrip.mcp.db.SchemaIntrospector
-import com.clawphone.datagrip.mcp.db.SqlValidator
-import com.clawphone.datagrip.mcp.settings.DbMcpSettings
+import io.github.siddiquizeeshan.datagrip.mcp.db.DataSourceResolver
+import io.github.siddiquizeeshan.datagrip.mcp.db.QueryExecutor
+import io.github.siddiquizeeshan.datagrip.mcp.db.SchemaIntrospector
+import io.github.siddiquizeeshan.datagrip.mcp.db.SqlValidator
+import io.github.siddiquizeeshan.datagrip.mcp.settings.DbMcpSettings
 import com.intellij.database.dataSource.LocalDataSource
 import com.intellij.mcpserver.McpToolset
 import com.intellij.mcpserver.annotations.McpDescription
@@ -138,7 +138,7 @@ class DatabaseToolset : McpToolset {
         return SchemaIntrospector.searchSchema(ds, pattern)
     }
 
-    private fun buildExplainSql(driverName: String, sql: String): String {
+    internal fun buildExplainSql(driverName: String, sql: String): String {
         if (sql.trimStart().uppercase().startsWith("EXPLAIN")) return sql
 
         return when {

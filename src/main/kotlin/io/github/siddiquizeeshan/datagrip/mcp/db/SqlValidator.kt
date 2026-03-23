@@ -1,4 +1,4 @@
-package com.clawphone.datagrip.mcp.db
+package io.github.siddiquizeeshan.datagrip.mcp.db
 
 object SqlValidator {
 

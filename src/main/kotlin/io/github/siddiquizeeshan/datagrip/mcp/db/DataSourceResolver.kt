@@ -1,4 +1,4 @@
-package com.clawphone.datagrip.mcp.db
+package io.github.siddiquizeeshan.datagrip.mcp.db
 
 import com.intellij.database.dataSource.DatabaseConnection
 import com.intellij.database.dataSource.DatabaseConnectionManager
