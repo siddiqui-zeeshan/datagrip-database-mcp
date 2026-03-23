@@ -30,7 +30,13 @@ The plugin zip is written to `build/distributions/`.
 
 **Option A: Database tools only (recommended)**
 
-Use the included filter proxy to expose only the 6 database tools. This strips DataGrip's built-in IDE tools from the MCP response, keeping your AI assistant's context clean.
+Use the filter proxy to expose only the 6 database tools. This strips DataGrip's built-in IDE tools from the MCP response, keeping your AI assistant's context clean.
+
+Download the proxy script:
+
+```bash
+curl -o mcp-filter-proxy.py https://raw.githubusercontent.com/siddiqui-zeeshan/datagrip-database-mcp/main/mcp-filter-proxy.py
+```
 
 ```json
 {
