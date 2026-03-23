@@ -5,9 +5,23 @@
     <vendor>Zeeshan Siddiqui</vendor>
 
     <description><![CDATA[
-    Extends DataGrip's built-in MCP server with database query and schema tools.
-    Lets AI assistants like Claude Code query databases through DataGrip's existing
-    connections — SSH tunnels, SSL, and auth included — with zero extra config.
+    <p>Extends DataGrip's built-in MCP server with 6 database tools.
+    AI assistants like Claude Code can query databases through DataGrip's existing
+    connections &mdash; SSH tunnels, SSL, and auth included &mdash; with zero extra config.</p>
+
+    <h3>Tools</h3>
+    <ul>
+      <li><b>list_datasources</b> &mdash; List all configured datasources with connection status</li>
+      <li><b>get_schema</b> &mdash; Get tables, columns, types, and primary keys</li>
+      <li><b>run_query</b> &mdash; Execute SQL queries with row limits and timeouts</li>
+      <li><b>explain_query</b> &mdash; Get execution plans (auto-detects EXPLAIN syntax per driver)</li>
+      <li><b>get_table_info</b> &mdash; Columns, indexes, and foreign keys for a table</li>
+      <li><b>search_schema</b> &mdash; Search tables and columns by pattern</li>
+    </ul>
+
+    <h3>Safety</h3>
+    <p>Read-only by default. Writes must be explicitly enabled per datasource in
+    <b>Settings &gt; Tools &gt; Database MCP Tools</b>.</p>
     ]]></description>
 
     <depends>com.intellij.modules.platform</depends>

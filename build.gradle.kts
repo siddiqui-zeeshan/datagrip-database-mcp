@@ -42,7 +42,35 @@ intellijPlatform {
     pluginConfiguration {
         name = providers.gradleProperty("pluginName")
         version = providers.gradleProperty("pluginVersion")
+
+        ideaVersion {
+            sinceBuild = providers.gradleProperty("pluginSinceBuild")
+            untilBuild = providers.gradleProperty("pluginUntilBuild")
+        }
+
+        changeNotes = providers.gradleProperty("pluginChangeNotes")
     }
+
+    signing {
+        val certChainFile = providers.environmentVariable("CERTIFICATE_CHAIN_FILE")
+        val privKeyFile = providers.environmentVariable("PRIVATE_KEY_FILE")
+        val certChainContent = providers.environmentVariable("CERTIFICATE_CHAIN")
+        val privKeyContent = providers.environmentVariable("PRIVATE_KEY")
+
+        if (certChainFile.isPresent && privKeyFile.isPresent) {
+            certificateChainFile = file(certChainFile)
+            privateKeyFile = file(privKeyFile)
+        } else if (certChainContent.isPresent && privKeyContent.isPresent) {
+            certificateChain = certChainContent
+            privateKey = privKeyContent
+        }
+        password = providers.environmentVariable("PRIVATE_KEY_PASSWORD")
+    }
+
+    publishing {
+        token = providers.environmentVariable("PUBLISH_TOKEN")
+    }
+
     instrumentCode = false
 }
 
