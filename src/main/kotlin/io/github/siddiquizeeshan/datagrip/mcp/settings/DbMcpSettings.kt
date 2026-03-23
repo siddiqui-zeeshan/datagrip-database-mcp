@@ -1,4 +1,4 @@
-package com.clawphone.datagrip.mcp.settings
+package io.github.siddiquizeeshan.datagrip.mcp.settings
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
