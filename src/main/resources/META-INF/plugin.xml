@@ -30,15 +30,15 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService
-            serviceImplementation="io.github.siddiquizeeshan.database.mcp.settings.DbMcpSettings"/>
+            serviceImplementation="io.github.siddiquizeeshan.datagrip.mcp.settings.DbMcpSettings"/>
         <applicationConfigurable
             parentId="tools"
-            instance="io.github.siddiquizeeshan.database.mcp.settings.DbMcpSettingsConfigurable"
-            id="io.github.siddiquizeeshan.database.mcp.settings"
+            instance="io.github.siddiquizeeshan.datagrip.mcp.settings.DbMcpSettingsConfigurable"
+            id="io.github.siddiquizeeshan.datagrip.mcp.settings"
             displayName="Database MCP Tools"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij.mcpServer">
-        <mcpToolset implementation="io.github.siddiquizeeshan.database.mcp.tools.DatabaseToolset"/>
+        <mcpToolset implementation="io.github.siddiquizeeshan.datagrip.mcp.tools.DatabaseToolset"/>
     </extensions>
 </idea-plugin>
